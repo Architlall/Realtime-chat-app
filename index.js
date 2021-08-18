@@ -3,9 +3,10 @@ const http = require('http');
 const express = require('express');
 const socket = require('socket.io');
 
-const userJoin = require('./utils/users');
-const getCurrentUser = require('./utils/users');
+
 const formatMessage = require('./utils/messages');
+const { userJoin, getCurrentUser} = require('./utils/users');
+
 
 const app = express();
 const server = http.createServer(app);
@@ -13,6 +14,7 @@ const io = require('socket.io')(server);
 const botName = 'ChatBot';
 
 app.use(express.static(path.join(__dirname,"public")));
+
 
 io.on('connection', socket => {
 socket.on('joinRoom', ({username, room}) => {
@@ -22,7 +24,7 @@ socket.on('joinRoom', ({username, room}) => {
 
     console.log('New websocket connection at :' + socket.id);
     socket.emit('message', formatMessage(botName, 'Welcome to Chat ON!'));
-    socket.broadcast.to(user.room).emit('message', formatMessage(botName,'A user has joined the chat'));
+    socket.broadcast.to(user.room).emit('message', formatMessage(botName,`${user.username} has joined the chat`));
    
 })
 
@@ -34,7 +36,7 @@ socket.on('joinRoom', ({username, room}) => {
     })
 
     socket.on('disconnect', () => {
-        io.emit('message', formatMessage(botName,'A user has left the chat'));
+        io.emit('message', formatMessage(botName,`A user has left the chat`));
     });
 });
 

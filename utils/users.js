@@ -13,6 +13,6 @@ function getCurrentUser(id) {
 }
 
 module.exports = {
-    userJoin,
+    userJoin ,
     getCurrentUser
 }
